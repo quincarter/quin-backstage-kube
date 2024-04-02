@@ -1,18 +1,15 @@
 app:
-  title: Scaffolded Backstage App
+  title: Quin's Test Backstage Instance
   baseUrl: http://localhost:3000
 
 organization:
-  name: My Company
+  name: QuinCarter
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
   # See https://backstage.io/docs/auth/service-to-service-auth for
   # information on the format
-  # auth:
-  #   keys:
-  #     - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:7007
+  baseUrl: 'http://localhost:7007'
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
@@ -28,8 +25,12 @@ backend:
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
-    client: better-sqlite3
-    connection: ':memory:'
+    client: pg
+    connection:
+      host: ${POSTGRES_SERVICE_HOST}
+      port: ${POSTGRES_SERVICE_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -59,14 +60,24 @@ techdocs:
   builder: 'local' # Alternatives - 'external'
   generator:
     runIn: 'docker' # Alternatives - 'local'
+    mkdocs:
+      legacyCopyReadmeMdToIndexMd: true
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
 auth:
-  # see https://backstage.io/docs/auth/ to learn about auth providers
+  environment: development
   providers:
+    github:
+      development:
+        clientId: 08a7ef287bce628e2179
+        clientSecret: 0ce4afdad1c8457d068a7ceda6cace7ddd795b96
+        # signIn:
+        #   resolvers:
+        #     - resolver: emailMatchingUserEntityProfileEmail
+        #     - resolver: emailLocalPartMatchingUserEntityName
+        #     - resolver: usernameMatchingUserEntityName
     # See https://backstage.io/docs/auth/guest/provider
-    guest: {}
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
